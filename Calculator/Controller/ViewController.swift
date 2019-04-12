@@ -2,9 +2,6 @@
 //  ViewController.swift
 //  Calculator
 //
-//  Created by Angela Yu on 10/09/2018.
-//  Copyright © 2018 London App Brewery. All rights reserved.
-//
 
 import UIKit
 
@@ -22,27 +19,26 @@ class ViewController: UIViewController {
         set {
             //displayLabel.text = String(displayValue)
             //must set to newValue keyword!!
-            displayLabel.text = String(newValue)
+            displayLabel.text = String(format: "%g", newValue)
         }
     }
     
+    
     @IBOutlet weak var displayLabel: UILabel!
     
-    
+    private var calcLogic = CalculatorLogic()
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         
         //What should happen when a non-number button is pressed
         isFinishedTypingNumber = true
         
-        //print(sender.currentTitle!)
+        calcLogic.setNumber(displayValue)
+
         if let calcMethod = sender.currentTitle {
-            if calcMethod == "+/-" {
-                displayValue *= -1
-            } else if calcMethod == "AC" {
-                displayValue = 0
-            } else if calcMethod == "%" {
-                displayValue /= 100
+            
+            if let result = calcLogic.calculate(symbol: calcMethod) {
+                displayValue = result
             }
         }
     }
@@ -59,13 +55,13 @@ class ViewController: UIViewController {
             } else {
                 if numValue == "." {
                     
-                    if !(floor(displayValue) == displayValue) {
+                    //if !(floor(displayValue) == displayValue) {
+                    if displayLabel.text!.contains(".") {
                         return
                     }
                     
-                } else {
-                    displayLabel.text! += numValue
                 }
+                displayLabel.text! += numValue
             }
         }
     }
